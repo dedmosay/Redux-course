@@ -1,70 +1,111 @@
-# Getting Started with Create React App
+Установка пакета Redux:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### `npm i redux`
 
-## Available Scripts
+Redux состоит из Reducer, Store, Actions
 
-In the project directory, you can run:
+Подключение `Redux`
 
-### `yarn start`
+```js
+    const redux = require("redux");
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Сначала нужно создать некоторый Store (хранилище для данных)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Store
 
-### `yarn test`
+```js
+    // Store
+    const store = redux.createStore(reducer);
+    console.log("1 - Начальный State", store.getState());
+    store.subscribe(() => {
+        console.log("4 - Подписка на  Subscribe", store.getState());
+    });
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+В `createStore` передаем значения с помощью ```reducer```
 
-### `yarn build`
+### Reducer
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+    // Reducer
+    const reducer = (state = initialState, action) => {
+        switch (action.type) {
+            case "ADD":
+            return {
+                counter: state.counter + 1,
+            };
+            case "SUB":
+            return {
+                counter: state.counter - 1,
+            };
+            case "NUM":
+            return {
+                counter: state.counter + addNumber.value,
+            };
+            default:
+            return state;
+        }
+    };
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Примечание:
+Если `state` не определен, то его задают начальным параметром `initialState`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+    const initialState = {
+        counter: 0,
+    };
+```
 
-### `yarn eject`
+В reducer принимает еще объект Actions
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Данный объект по сути имеет поле TYPE
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Actions
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```js
+    // Action
+    const addCounter = {
+        type: "ADD",
+    };
+    const subCounter = {
+        type: "SUB",
+    };
+    const addNumber = {
+        type: "NUM",
+        value: 10,
+    };
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```dispatch``` используем для вызова действия
 
-## Learn More
+### Dispatch
+```js
+    // dispatch 
+    store.dispatch(addCounter);
+    console.log("2 - Выполнение ADD ", store.getState());
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    store.dispatch(subCounter);
+    console.log("3 - Выполнение SUB ", store.getState());
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    store.dispatch(addNumber);
+    console.log("4 - Выполнение NUM ", store.getState());
 
-### Code Splitting
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Запуск
 
-### Analyzing the Bundle Size
+### `node redux.js`
+```
+    1 - Начальный State { counter: 0 }
+    4 - Подписка на  Subscribe { counter: 1 }
+    2 - Выполнение ADD  { counter: 1 }
+    4 - Подписка на  Subscribe { counter: 0 }
+    3 - Выполнение SUB  { counter: 0 }
+    4 - Подписка на  Subscribe { counter: 10 }
+    4 - Выполнение NUM  { counter: 10 }
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### см. redux.js
